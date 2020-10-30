@@ -11,7 +11,7 @@ To Build:
 - Move to Current (cd Current)
 - docker build --tag <your-tag:your-version> .
 
-#IMPORTANT!!!  
+# IMPORTANT!!!  
 Only Relevant to the "Legacy" Edition <br />
 This Version is Deprecated and will no longer be updated or maintained.<br />
 
