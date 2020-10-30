@@ -1,0 +1,13 @@
+version: '3'
+
+volumes:
+  torn-scrapper-conf:
+    external: true
+
+
+services:
+  tornscrapper:
+    image: tornscrapper:0.1
+    container_name: tornscrapper
+    volumes:
+      - torn-scrapper-conf:/scrapper/config

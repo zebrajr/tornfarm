@@ -1,0 +1,9 @@
+{
+  "apikey": "<yourapikey>",
+  "mysql": {
+    "host": "<host>",
+    "user": "<user>",
+    "pwd": "<pwd>",
+    "database": "<database>"
+  }
+}
