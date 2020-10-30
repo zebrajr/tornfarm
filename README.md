@@ -5,15 +5,15 @@ To Deploy:
 - Set the deploy.sh to executable (sudo chmod +x deploy.sh) and run it (./deploy.sh)
 - Start the container with docker-compose (docker-compose up OR docker-compose up -d)
 - Stop the container and edit the newly created settings.conf
-- Start the container again 
+- Start the container again
 
 To Build:
 - Move to Current (cd Current)
 - docker build --tag <your-tag:your-version> .
 
-IMPORTANT!!!
-Only Relevant to the "Legacy" Edition
-This Version is Deprecated and will no longer be updated or maintained.
+#IMPORTANT!!!  
+Only Relevant to the "Legacy" Edition <br />
+This Version is Deprecated and will no longer be updated or maintained.<br />
 
 A python script that scraps the TORN Text-Based MMORPG Player Database and indexes it, and a front and backoffice in PHP / MySQL to use that information
 
