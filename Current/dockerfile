@@ -5,7 +5,7 @@ FROM alpine:latest as build
 WORKDIR /scrapper
 
 # Copy the requirement file
-COPY dev/ .
+COPY src/ .
 
 # Install Dependencies
 RUN apk add --update --no-cache python3 && \
@@ -32,7 +32,7 @@ LABEL maintainer="Zebra <csousa90@gmail.com>" \
 
 
 # Creates a Single Layer Image
-# Info: Not possible currently, since the Software is NOT self contained eg: 
+# Info: Not possible currently, since the Software is NOT self contained eg:
 #FROM scratch
 #WORKDIR /app
 #COPY --from=build /app .
