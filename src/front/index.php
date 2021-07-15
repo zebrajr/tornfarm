@@ -44,6 +44,9 @@
 
   func_display_visitors($conn);
   echo "</td>";
+  echo "<td>";
+  echo "If you want, feel free to <a href='https://www.torn.com/profiles.php?XID=2318723'>Donate</a>";
+  echo "</td>";
   echo "</tr>";
 
   // Create connection
