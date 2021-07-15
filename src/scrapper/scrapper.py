@@ -43,7 +43,8 @@ def addtolog(message):
 
 
 current_request = 1
-while 1 == 1:
+currentPlayerID = random.randint(startingid,endingid)
+while currentPlayerID <= endingid:
     # Creates the DB Connection
     mydb = mysql.connector.connect(
         host = 'mySqlBench',
@@ -53,12 +54,9 @@ while 1 == 1:
     )
     mycursor = mydb.cursor()
 
-    # Gets a random user
-    playerid = random.randint(startingid,endingid)
-
     # Search for ID as ignored user
     sqlquery = "SELECT id, playerid FROM torn_list_ignored WHERE playerid = %s"
-    sqlid = (playerid, )
+    sqlid = (currentPlayerID, )
     mycursor.execute(sqlquery, sqlid)
     myresult = mycursor.fetchall()
 
@@ -76,7 +74,7 @@ while 1 == 1:
 
     # Creates Full Link and makes the Web Request
     if not SkipAction:
-        fulllink = homepage1 + str(playerid) + homepage2 + apikey
+        fulllink = homepage1 + str(currentPlayerID) + homepage2 + apikey
         response = json.loads(requests.get(fulllink).text)
 
     # If it contains an Error Attribute
@@ -87,21 +85,21 @@ while 1 == 1:
             time.sleep(10)
         else:
             # Error other then 5 means that the PlayerID is invalid
-            message = [playerid, response.get('error').get('code'), response.get('error').get('error')]
+            message = [currentPlayerID, response.get('error').get('code'), response.get('error').get('error')]
             print(message)
             # Add the user to the table
             sqlquery = "INSERT INTO torn_list_ignored (playerid) VALUES (%s)"
-            values = (playerid, )
+            values = (currentPlayerID, )
             mycursor.execute(sqlquery, values)
             mydb.commit()
     # In case Data is returned
     if ((response.get('rank')) and not (SkipAction)):
         # Search for ID as known user
         sqlquery = "SELECT id, playerid FROM torn_list WHERE playerid = %s"
-        sqlid = (playerid, )
+        sqlid = (currentPlayerID, )
         mycursor.execute(sqlquery, sqlid)
         myresult = mycursor.fetchall()
-        csv = [playerid, \
+        csv = [currentPlayerID, \
                response.get('rank'), \
                response.get('role'), \
                response.get('level'), \
@@ -122,7 +120,7 @@ while 1 == 1:
 
         # If the User is found
         if(len(myresult) == 1):
-            print ("Updating PlayerID:", playerid)
+            print ("Updating PlayerID:", currentPlayerID)
             sqlquery = "UPDATE torn_list SET rank = %s, role = %s, level = %s, awards = %s, age = %s, name = %s, faction_name = %s, maximum_life = %s, last_action = %s, attack_date = %s, totalCrimes = %s, totalNetworth = %s, xanTaken = %s, energyDrinkUsed = %s, energyRefills = %s, statEnhancersUsed = %s WHERE playerid = %s"
             values = (csv[1], csv[2], csv[3], csv[4], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13], csv[14], csv[15], csv[16], csv[17], csv[0])
 
@@ -132,7 +130,7 @@ while 1 == 1:
         #totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed
         # If the User isn't found
         if(len(myresult) == 0):
-            print ("Creating PlayerID:", playerid)
+            print ("Creating PlayerID:", currentPlayerID)
             sqlquery = "INSERT INTO torn_list (rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date, totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (csv[1], csv[2], csv[3], csv[4], csv[5], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13], csv[14], csv[15], csv[16], csv[17])
 
@@ -144,3 +142,4 @@ while 1 == 1:
 
     # Closes the DB Connection
     mydb.close()
+    currentPlayerID += 1
