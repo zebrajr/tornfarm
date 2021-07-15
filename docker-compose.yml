@@ -19,6 +19,9 @@ services:
     depends_on:
       - mysql-server
     restart: unless-stopped
+    volumes:
+      - "./src/scrapper/:/scrapper"
+    read_only: true
 
   mysql-server:
     container_name: mySqlBench

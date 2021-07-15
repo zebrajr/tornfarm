@@ -4,9 +4,9 @@ apikey = "qCE5aQ6a2kHPpXoy"
 # Starting ID
 startingid = 1
 # Ending ID
-endingid = 2385000
+endingid = 2690000
 # Maximal API Requests / Minute
-maxrequests = 99
+maxrequests = 80
 
 # ------------------------------------------------------
 # ---------- Do not edit below here if unsure ----------
@@ -25,7 +25,8 @@ import datetime
 
 
 homepage1 = "https://api.torn.com/user/"
-homepage2 = "?selections=&key="
+homepage2 = "?selections=profile,personalstats,crimes&key="
+
 
 # --------------------------------
 # ---------- Functions  ----------
@@ -39,6 +40,7 @@ def addtolog(message):
 # ----------------------------------
 # ---------- MAIN PROGRAM ----------
 # ----------------------------------
+
 
 current_request = 1
 while 1 == 1:
@@ -99,19 +101,40 @@ while 1 == 1:
         sqlid = (playerid, )
         mycursor.execute(sqlquery, sqlid)
         myresult = mycursor.fetchall()
-        csv = [playerid, response.get('rank'), response.get('role'), response.get('level'), response.get('awards'), response.get('age'), response.get('player_id'), response.get('name'), response.get('faction').get('faction_name'), response.get('life').get('maximum'), response.get('last_action').get('relative'), datetime.datetime.now(), '0', '-']
+        csv = [playerid, \
+               response.get('rank'), \
+               response.get('role'), \
+               response.get('level'), \
+               response.get('awards'), \
+               response.get('age'), \
+               response.get('player_id'), \
+               response.get('name'), \
+               response.get('faction').get('faction_name'), \
+               response.get('life').get('maximum'), \
+               response.get('last_action').get('relative'), \
+               datetime.datetime.now(), \
+               response.get('criminalrecord').get('total'), \
+               response.get('personalstats').get('networth'), \
+               response.get('personalstats').get('xantaken'), \
+               response.get('personalstats').get('energydrinkused'), \
+               response.get('personalstats').get('refills'), \
+               response.get('personalstats').get('statenhancersused')]
 
         # If the User is found
         if(len(myresult) == 1):
             print ("Updating PlayerID:", playerid)
-            sqlquery = "UPDATE torn_list SET rank = %s, role = %s, level = %s, awards = %s, age = %s, name = %s, faction_name = %s, maximum_life = %s, last_action = %s, attack_date = %s WHERE playerid = %s"
-            values = (csv[1], csv[2], csv[3], csv[4], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[0])
+            sqlquery = "UPDATE torn_list SET rank = %s, role = %s, level = %s, awards = %s, age = %s, name = %s, faction_name = %s, maximum_life = %s, last_action = %s, attack_date = %s, totalCrimes = %s, totalNetworth = %s, xanTaken = %s, energyDrinkUsed = %s, energyRefills = %s, statEnhancersUsed = %s WHERE playerid = %s"
+            values = (csv[1], csv[2], csv[3], csv[4], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13], csv[14], csv[15], csv[16], csv[17], csv[0])
 
+
+        # Added
+        # totalCrimes = %s, totalNetworth = %s, xanTaken = %s, energyDrinkUsed = %s, energyRefills = %s, statEnhancersUsed = %s
+        #totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed
         # If the User isn't found
         if(len(myresult) == 0):
             print ("Creating PlayerID:", playerid)
-            sqlquery = "INSERT INTO torn_list (rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date, attack_level, attack_result) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            values = (csv[1], csv[2], csv[3], csv[4], csv[5], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13])
+            sqlquery = "INSERT INTO torn_list (rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date, totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            values = (csv[1], csv[2], csv[3], csv[4], csv[5], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13], csv[14], csv[15], csv[16], csv[17])
 
         mycursor.execute(sqlquery, values)
         mydb.commit()

@@ -28,9 +28,15 @@
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_maximumlife disabled></td>";
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastaction disabled></td>";
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
     echo "</tr>";
     echo "<tr>";
-      echo "<td align='center' colspan='11'>";
+      echo "<td align='center' colspan='17'>";
         echo "<input type='submit' name='Filter' value='Update Filters'>";
       echo "</td>";
     echo "</tr>";
@@ -50,6 +56,12 @@
       echo "<td align='center'>Maximum Life</td>";
       echo "<td align='center'>Last Action</td>";
       echo "<td align='center'>Last Check</td>";
+      echo "<td align='center'>Total<br>Crimes</td>";
+      echo "<td align='center'>Networth</td>";
+      echo "<td align='center'>Xanax<br>Taken</td>";
+      echo "<td align='center'>Energy<br>Drink<br>Used</td>";
+      echo "<td align='center'>Energy<br>Refills</td>";
+      echo "<td align='center'>SE<br>Used</td>";
     echo "</tr>";
   }
 
@@ -72,9 +84,10 @@
       $int_count_ignored = $obj_stmt_ignored_count_query_count;
     }
     $obj_stmt_ignored_count_query->close();
-	
+
 	// Gets Last time since update tbl.torn_list
-	$obj_stmt_last_update_query = $conn->prepare("SELECT UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = 'carlosso_tornfarm' AND TABLE_NAME = 'torn_list'");
+  # [TODO] TableSchema name should be read from config
+	$obj_stmt_last_update_query = $conn->prepare("SELECT UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = 'tornFarm' AND TABLE_NAME = 'torn_list'");
 	$obj_stmt_last_update_query->execute();
 	$obj_stmt_last_update_query->bind_result($obj_stmt_last_update_datetime);
 	while($row = $obj_stmt_last_update_query->fetch()){
@@ -87,7 +100,7 @@
 
     // Displays the information
     echo "<tr>";
-    echo "<td align='center'>Last Update (Frontend): <b>2019-11-08 20:35:00</b></td>";
+    echo "<td align='center'>Last Update (Frontend): <b>2021-07-15 20:00:00</b></td>";
     echo "<td align='center'>Total IDs Indexed: <b>" . $int_total_targets . "</b></td>";
     echo "</tr><tr>";
     echo "<td align='center'>Last Update (Database): <b>" . $str_last_update_datetime . "</b></td>";
@@ -159,6 +172,12 @@
       echo "<td align='center'>";
         if($value['attack_date'] == "0000-00-00"){echo "";} else {echo $value['attack_date'];};
       echo "</td>";
+      echo "<td align='center'>" . $value['totalCrimes'] . "</td>";
+      echo "<td align='center'>" . $value['totalNetworth'] . "</td>";
+      echo "<td align='center'>" . $value['xanTaken'] . "</td>";
+      echo "<td align='center'>" . $value['energyDrinkUsed'] . "</td>";
+      echo "<td align='center'>" . $value['energyRefills'] . "</td>";
+      echo "<td align='center'>" . $value['statEnchancersUsed'] . "</td>";
       echo "</tr>";
     }
   }
@@ -167,12 +186,12 @@
   function func_get_targets_selections($conn, $int_minimum_level, $int_maximum_level, $int_limit, $int_results_per_page, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name){
     $str_maximum_rank = $str_maximum_rank . '%';
 	$str_faction_name = '%' . $str_faction_name . '%';
-    $query = "SELECT rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date FROM torn_list WHERE role in ('Civilian') ";
+    $query = "SELECT rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date, totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed FROM torn_list WHERE role in ('Civilian') ";
     $query .= "AND level >= ? AND level <= ? AND rank LIKE ? AND faction_name LIKE ? AND playerid >= ? and playerid <= ? ORDER BY level ASC LIMIT ?, ?";
     $obj_stmt_query_players = $conn->prepare($query);
     $obj_stmt_query_players->bind_param('iissiiii', $int_minimum_level, $int_maximum_level, $str_maximum_rank, $str_faction_name, $int_minimum_playerid, $int_maximum_playerid, $int_limit, $int_results_per_page);
     $obj_stmt_query_players->execute();
-    $obj_stmt_query_players->bind_result($result_rank, $result_role, $result_level, $result_awards, $result_age, $result_playerid, $result_name, $result_faction_name, $result_maximum_life, $result_last_action, $result_attack_date);
+    $obj_stmt_query_players->bind_result($result_rank, $result_role, $result_level, $result_awards, $result_age, $result_playerid, $result_name, $result_faction_name, $result_maximum_life, $result_last_action, $result_attack_date, $result_totalCrimes, $result_totalNetworth, $result_xanTaken, $result_energyDrinkUsed, $result_energyRefills, $result_statEnchancersUsed);
     $array_targets_selection = array();
     while($row = $obj_stmt_query_players->fetch()){
       $array_values = array();
@@ -187,6 +206,12 @@
       $array_values["maximum_life"] = $result_maximum_life;
       $array_values["last_action"] = $result_last_action;
       $array_values["attack_date"] = $result_attack_date;
+      $array_values["totalCrimes"] = $result_totalCrimes;
+      $array_values["totalNetworth"] = $result_totalNetworth;
+      $array_values["xanTaken"] = $result_xanTaken;
+      $array_values["energyDrinkUsed"] = $result_energyDrinkUsed;
+      $array_values["energyRefills"] = $result_energyRefills;
+      $array_values["statEnchancersUsed"] = $result_statEnchancersUsed;
       $array_targets_selection[] = $array_values;
     }
     $obj_stmt_query_players->close();
@@ -218,6 +243,6 @@
     }
     echo "</tr></table>";
   }
-  
+
 
 ?>
