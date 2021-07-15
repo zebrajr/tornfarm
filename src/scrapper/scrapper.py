@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
 # ---------- CONFIG ----------
-# Config File
-configfile = 'config/settings.json'
-# Config File Sample
-configfilesample = 'config/settings.json.sample'
 # Your API Key
 apikey = "qCE5aQ6a2kHPpXoy"
 # Starting ID
@@ -18,18 +13,16 @@ maxrequests = 99
 # ------------------------------------------------------
 
 # ----------  Imports and Main Link Configuration ----------
+import json
 import time
 import sys
-import os
-from shutil import copyfile
-'''
-import json
 import csv
+import os
 import random
 import requests
 import mysql.connector
 import datetime
-'''
+
 
 homepage1 = "https://api.torn.com/user/"
 homepage2 = "?selections=&key="
@@ -48,43 +41,24 @@ def addtolog(message):
 # ----------------------------------
 
 current_request = 1
-while 1==1:
-    arr = os.listdir()
-    print(arr)
-    print("Hey")    
-    try:
-      with open(configfile, 'r') as f:
-        f = open(configfile, 'r')
-        file_contents = f.read()
-        print(file_contents)
-        f.close()
-    except:
-        print("Config Not Found. Creating from .sample")
-        copyfile(configfilesample, configfile)
-    time.sleep(10)
-
-
-    ''' 
+while 1 == 1:
     # Creates the DB Connection
     mydb = mysql.connector.connect(
-        host = '[:DEPLOY]##YOUR_MYSQL_DATABASE_HOST##',
-        user = '[:DEPLOY]##YOUR_MYSQL_USER##',
-        password = '[:DEPLOY]##YOUR_MYSQL_PWD##',
-        database = '[:DEPLOY]##YOUR_MYSQL_DATABASE_NAME##'
+        host = 'mySqlBench',
+        user = 'root',
+        password = 'secret',
+        database = 'tornFarm'
     )
     mycursor = mydb.cursor()
-    
 
     # Gets a random user
     playerid = random.randint(startingid,endingid)
 
-    
     # Search for ID as ignored user
     sqlquery = "SELECT id, playerid FROM torn_list_ignored WHERE playerid = %s"
     sqlid = (playerid, )
     mycursor.execute(sqlquery, sqlid)
     myresult = mycursor.fetchall()
-    
 
     # Assumes there isn't a Skip Needed
     SkipAction = False
@@ -126,7 +100,6 @@ while 1==1:
         mycursor.execute(sqlquery, sqlid)
         myresult = mycursor.fetchall()
         csv = [playerid, response.get('rank'), response.get('role'), response.get('level'), response.get('awards'), response.get('age'), response.get('player_id'), response.get('name'), response.get('faction').get('faction_name'), response.get('life').get('maximum'), response.get('last_action').get('relative'), datetime.datetime.now(), '0', '-']
-        
 
         # If the User is found
         if(len(myresult) == 1):
@@ -140,14 +113,11 @@ while 1==1:
             sqlquery = "INSERT INTO torn_list (rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date, attack_level, attack_result) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (csv[1], csv[2], csv[3], csv[4], csv[5], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13])
 
-        
         mycursor.execute(sqlquery, values)
         mydb.commit()
-        
 
     if not SkipAction:
         current_request += 1
 
     # Closes the DB Connection
     mydb.close()
-'''

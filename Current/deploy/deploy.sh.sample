@@ -1,4 +1,0 @@
-#!/bin/bash
-STORAGE_PATH="/home/<your-username>"
-mkdir -p "$STORAGE_PATH"/torn-scrapper/storage/conf
-docker volume create --driver local --opt type=none --opt device="$STORAGE_PATH"/torn-scrapper/storage/conf --opt o=bind torn-scrapper-conf

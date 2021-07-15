@@ -5,7 +5,7 @@ FROM alpine:latest as build
 WORKDIR /scrapper
 
 # Copy the requirement file
-COPY src/ .
+COPY src/scrapper/ .
 
 # Install Dependencies
 RUN apk add --update --no-cache python3 && \
@@ -14,8 +14,8 @@ RUN apk add --update --no-cache python3 && \
     pip3 install --no-cache --upgrade pip setuptools && \
     ls -la && \
     ls -la config/ && \
-    pwd
-    #pip3 install --requirement requirements.txt
+    pwd && \
+    pip3 install --requirement requirements.txt
 
 #WORKDIR /app
 # Copy the script file
