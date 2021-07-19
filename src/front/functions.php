@@ -3,6 +3,7 @@
 
   // Function to Display the Filter Options (Minimum-Maximum)
   function func_display_filter_options($int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name){
+    # First Row, as in, "Max Values"
     echo "<tr>";
       echo "<td align='center' rowspan='2'><input type='text' value='" . $str_maximum_rank . "' name=maximum_rank></td>";
       echo "<td align='center' rowspan='2'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_role disabled></td>";
@@ -16,6 +17,7 @@
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_lastaction disabled></td>";
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_lastcheck disabled></td>";
     echo "</tr>";
+    # Second Row, as in, "Min Values"
     echo "<tr>";
       # echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_rank disabled></td>";
       # echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_role disabled></td>";
@@ -57,7 +59,7 @@
       echo "<td align='center'>Last Action</td>";
       echo "<td align='center'>Last Check</td>";
       echo "<td align='center'>Total<br>Crimes</td>";
-      echo "<td align='center'>Networth</td>";
+      echo "<td align='center'>Networth<br>(in M.)</td>";
       echo "<td align='center'>Xanax<br>Taken</td>";
       echo "<td align='center'>Energy<br>Drink<br>Used</td>";
       echo "<td align='center'>Energy<br>Refills</td>";
@@ -147,11 +149,14 @@
   }
 
 
+  # Function to display the values from each indexed user in a Table Format
   function func_display_players($array_targets_selection){
     // $tr_switch is used to create the effect of a table design
     // using a bgcolor for the tr
     $tr_switch = false;
     foreach($array_targets_selection as $value){
+      # Row Output
+      # Simple Switch to improve table user readibility
       if ($tr_switch == false){
         echo "<tr bgcolor='lightgrey'>";
         $tr_switch = true;
@@ -159,6 +164,7 @@
         echo "<tr>";
         $tr_switch = false;
       }
+      # Actual Row information (Player Rank, Level, Name, etc)
       echo "<td align='center'>" . $value['rank'] . "</td>";
       echo "<td align='center'>" . $value['role'] . "</td>";
       echo "<td align='center'>" . $value['level'] . "</td>";
@@ -173,7 +179,9 @@
         if($value['attack_date'] == "0000-00-00"){echo "";} else {echo $value['attack_date'];};
       echo "</td>";
       echo "<td align='center'>" . $value['totalCrimes'] . "</td>";
-      echo "<td align='center'>" . $value['totalNetworth'] . "</td>";
+      echo "<td align='center'>";
+        echo round(($value['totalNetworth']/1000000), 2);
+      echo "</td>";
       echo "<td align='center'>" . $value['xanTaken'] . "</td>";
       echo "<td align='center'>" . $value['energyDrinkUsed'] . "</td>";
       echo "<td align='center'>" . $value['energyRefills'] . "</td>";
@@ -183,6 +191,8 @@
   }
 
 
+  # Function to get the values from the SQL Database
+  # [TODO] Should be converted to sql_procedures
   function func_get_targets_selections($conn, $int_minimum_level, $int_maximum_level, $int_limit, $int_results_per_page, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name){
     $str_maximum_rank = $str_maximum_rank . '%';
 	$str_faction_name = '%' . $str_faction_name . '%';
@@ -222,7 +232,7 @@
   // Function to Display the Navigation Pages
   function func_display_navigation($conn, $int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_results_per_page, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name){
     $str_maximum_rank = $str_maximum_rank . '%';
-	$str_faction_name = '%' . $str_faction_name . '%';
+    $str_faction_name = '%' . $str_faction_name . '%';
     $query = "SELECT count(id) FROM torn_list WHERE role in ('Civilian') AND level >= ? AND level <= ? AND rank LIKE ? AND faction_name LIKE ? AND playerid >= ? AND playerid <= ? ORDER BY level ASC";
     $obj_stmt_navigation = $conn->prepare($query);
     $obj_stmt_navigation->bind_param('iissii', $int_minimum_level, $int_maximum_level, $str_maximum_rank, $str_faction_name, $int_minimum_playerid, $int_maximum_playerid);
