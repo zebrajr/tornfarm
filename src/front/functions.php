@@ -1,8 +1,8 @@
-<?php
+ <?php
   include "config.php";
 
   // Function to Display the Filter Options (Minimum-Maximum)
-  function func_display_filter_options($int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name){
+  function func_display_filter_options($int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name, $intMaxXanax, $intMinXanax){
     # First Row, as in, "Max Values"
     echo "<tr>";
       echo "<td align='center' rowspan='2'><input type='text' value='" . $str_maximum_rank . "' name=maximum_rank></td>";
@@ -16,6 +16,13 @@
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_maximumlife disabled></td>";
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_lastaction disabled></td>";
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_lastcheck disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_totalCrimes disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_networth disabled></td>";
+      echo "<td align='center'><input type='text' value ='" . $intMaxXanax . "' name=intMaxXanax ></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_energydrinks disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_energyrefills disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=maximum_se disabled></td>";
+    echo "</tr>";
     echo "</tr>";
     # Second Row, as in, "Min Values"
     echo "<tr>";
@@ -30,12 +37,12 @@
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_maximumlife disabled></td>";
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastaction disabled></td>";
       echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
-      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
-      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
-      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
-      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
-      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
-      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_lastcheck disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_totalCrimes disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_networth disabled></td>";
+      echo "<td align='center'><input type='text' value='" . $intMinXanax . "' name=intMinXanax></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_energydrinks disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_energyrefills disabled></td>";
+      echo "<td align='center'><input type='text' placeholder='Not Implemented (Yet)' name=minimum_se disabled></td>";
     echo "</tr>";
     echo "<tr>";
       echo "<td align='center' colspan='17'>";
@@ -193,13 +200,13 @@
 
   # Function to get the values from the SQL Database
   # [TODO] Should be converted to sql_procedures
-  function func_get_targets_selections($conn, $int_minimum_level, $int_maximum_level, $int_limit, $int_results_per_page, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name){
+  function func_get_targets_selections($conn, $int_minimum_level, $int_maximum_level, $int_limit, $int_results_per_page, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name, $intMaxXanax, $intMinXanax){
     $str_maximum_rank = $str_maximum_rank . '%';
 	$str_faction_name = '%' . $str_faction_name . '%';
     $query = "SELECT rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date, totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed FROM torn_list WHERE role in ('Civilian') ";
-    $query .= "AND level >= ? AND level <= ? AND rank LIKE ? AND faction_name LIKE ? AND playerid >= ? and playerid <= ? ORDER BY level ASC LIMIT ?, ?";
+    $query .= "AND level >= ? AND level <= ? AND rank LIKE ? AND faction_name LIKE ? AND playerid >= ? and playerid <= ? and xanTaken <= ? and xanTaken >= ? ORDER BY level ASC LIMIT ?, ?";
     $obj_stmt_query_players = $conn->prepare($query);
-    $obj_stmt_query_players->bind_param('iissiiii', $int_minimum_level, $int_maximum_level, $str_maximum_rank, $str_faction_name, $int_minimum_playerid, $int_maximum_playerid, $int_limit, $int_results_per_page);
+    $obj_stmt_query_players->bind_param('iissiiiiii', $int_minimum_level, $int_maximum_level, $str_maximum_rank, $str_faction_name, $int_minimum_playerid, $int_maximum_playerid, $intMaxXanax, $intMinXanax, $int_limit, $int_results_per_page);
     $obj_stmt_query_players->execute();
     $obj_stmt_query_players->bind_result($result_rank, $result_role, $result_level, $result_awards, $result_age, $result_playerid, $result_name, $result_faction_name, $result_maximum_life, $result_last_action, $result_attack_date, $result_totalCrimes, $result_totalNetworth, $result_xanTaken, $result_energyDrinkUsed, $result_energyRefills, $result_statEnchancersUsed);
     $array_targets_selection = array();
@@ -230,12 +237,12 @@
 
 
   // Function to Display the Navigation Pages
-  function func_display_navigation($conn, $int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_results_per_page, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name){
+  function func_display_navigation($conn, $int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_results_per_page, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name, $intMaxXanax, $intMinXanax){
     $str_maximum_rank = $str_maximum_rank . '%';
     $str_faction_name = '%' . $str_faction_name . '%';
-    $query = "SELECT count(id) FROM torn_list WHERE role in ('Civilian') AND level >= ? AND level <= ? AND rank LIKE ? AND faction_name LIKE ? AND playerid >= ? AND playerid <= ? ORDER BY level ASC";
+    $query = "SELECT count(id) FROM torn_list WHERE role in ('Civilian') AND level >= ? AND level <= ? AND rank LIKE ? AND faction_name LIKE ? AND playerid >= ? AND playerid <= ? and xanTaken <= ? and xanTaken >= ? ORDER BY level ASC";
     $obj_stmt_navigation = $conn->prepare($query);
-    $obj_stmt_navigation->bind_param('iissii', $int_minimum_level, $int_maximum_level, $str_maximum_rank, $str_faction_name, $int_minimum_playerid, $int_maximum_playerid);
+    $obj_stmt_navigation->bind_param('iissiiii', $int_minimum_level, $int_maximum_level, $str_maximum_rank, $str_faction_name, $int_minimum_playerid, $int_maximum_playerid, $intMaxXanax, $intMinXanax);
     $obj_stmt_navigation->execute();
     $obj_stmt_navigation->bind_result($result_id);
     while($row = $obj_stmt_navigation->fetch()){

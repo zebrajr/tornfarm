@@ -26,6 +26,8 @@
   $int_limit = 0;
   $str_faction_name = '%';
   $str_maximum_rank = '%';
+  $intMaxXanax = 999999;
+  $intMinXanax = 0;
 
 
   // Gets the User IP
@@ -62,6 +64,9 @@
   $int_post_minimum_playerid = $_POST["minimum_playerid"];
   $int_post_maximum_playerid = $_POST["maximum_playerid"];
   $str_post_faction_name = $_POST["maximum_faction_name"];
+  $postIntMaxXanax = $_POST['intMaxXanax'];
+  $postIntMinXanax = $_POST['intMinXanax'];
+
 
   // Displays the Server Stats
   func_display_server_stats($conn);
@@ -96,6 +101,14 @@
   if (isset($str_post_faction_name)){
 	$str_faction_name = $str_post_faction_name;
   }
+  // If the Max Xanax was changed
+  if (isset($postIntMaxXanax)){
+	$intMaxXanax = $postIntMaxXanax;
+  }
+  // If the Min Xanax was changed
+  if (isset($postIntMinXanax)){
+	$intMinXanax = $postIntMinXanax;
+  }
 
 
   // Handler for the Page Selection. Default to user selected, else to page 1
@@ -106,16 +119,16 @@
   // Displays the Table Header
   func_display_table_header();
   // Displays Filtering Options
-  func_display_filter_options($int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name);
+  func_display_filter_options($int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name, $intMaxXanax, $intMinXanax);
 
   // Gets and then Displays the Targets according to the selection (Filters + Pages)
-  $array_targets_selection = func_get_targets_selections($conn, $int_minimum_level, $int_maximum_level, $int_limit, $int_results_per_page, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name);
+  $array_targets_selection = func_get_targets_selections($conn, $int_minimum_level, $int_maximum_level, $int_limit, $int_results_per_page, $str_maximum_rank, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name, $intMaxXanax, $intMinXanax);
   func_display_players($array_targets_selection);
 
   echo "</table>";
 
   // Displays the Navigation Pages
-  func_display_navigation($conn, $int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_results_per_page, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name);
+  func_display_navigation($conn, $int_minimum_level, $int_maximum_level, $str_maximum_rank, $int_results_per_page, $int_minimum_playerid, $int_maximum_playerid, $str_faction_name, $intMaxXanax, $intMinXanax);
 
   echo "</form>";
   $conn->close();
