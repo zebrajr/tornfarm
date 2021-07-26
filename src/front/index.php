@@ -38,7 +38,7 @@
     or die('Error connecting to MySQL server.');
 
   // Display Unique Visitors count
-  echo "<form id='filter' action='index.php' method='post'>";
+  echo "<form id='filter' action='index.php' method='get'>";
   echo "<table border='0' width='100%>";
   echo "<tr>";
   echo "<td colspan='3' align='center'>";
@@ -57,15 +57,15 @@
 
   // Gets the first sort
   $sort1 = $_GET["sort1"];
-  $int_selected_page = $_POST["page"];
-  $int_post_minimum_level = $_POST["minimum_level"];
-  $int_post_maximum_level = $_POST["maximum_level"];
-  $str_post_maximum_rank = $_POST["maximum_rank"];
-  $int_post_minimum_playerid = $_POST["minimum_playerid"];
-  $int_post_maximum_playerid = $_POST["maximum_playerid"];
-  $str_post_faction_name = $_POST["maximum_faction_name"];
-  $postIntMaxXanax = $_POST['intMaxXanax'];
-  $postIntMinXanax = $_POST['intMinXanax'];
+  $int_selected_page = $_GET["page"];
+  $int_get_minimum_level = $_GET["minimum_level"];
+  $int_get_maximum_level = $_GET["maximum_level"];
+  $str_get_maximum_rank = $_GET["maximum_rank"];
+  $int_get_minimum_playerid = $_GET["minimum_playerid"];
+  $int_get_maximum_playerid = $_GET["maximum_playerid"];
+  $str_get_faction_name = $_GET["maximum_faction_name"];
+  $getIntMaxXanax = $_GET['intMaxXanax'];
+  $getIntMinXanax = $_GET['intMinXanax'];
 
 
   // Displays the Server Stats
@@ -78,36 +78,36 @@
 
   // SQL SELECT to get Indexed Players
   // If the Minimum Level Filter was changed
-  if (isset($int_post_minimum_level)){
-    $int_minimum_level = $int_post_minimum_level;
+  if (isset($int_get_minimum_level)){
+    $int_minimum_level = $int_get_minimum_level;
   }
   // If the Maximum Level Filter was changed
-  if (isset($int_post_maximum_level)){
-    $int_maximum_level = $int_post_maximum_level;
+  if (isset($int_get_maximum_level)){
+    $int_maximum_level = $int_get_maximum_level;
   }
   // If the Maximum Rank was changed
-  if (isset($str_post_maximum_rank)){
-    $str_maximum_rank = $str_post_maximum_rank;
+  if (isset($str_get_maximum_rank)){
+    $str_maximum_rank = $str_get_maximum_rank;
   }
   // If the Minimum PlayerID was changed
-  if (isset($int_post_minimum_playerid)){
-    $int_minimum_playerid = $int_post_minimum_playerid;
+  if (isset($int_get_minimum_playerid)){
+    $int_minimum_playerid = $int_get_minimum_playerid;
   }
   // If the Maximum PlayerID was changed
-  if (isset($int_post_maximum_playerid)){
-    $int_maximum_playerid = $int_post_maximum_playerid;
+  if (isset($int_get_maximum_playerid)){
+    $int_maximum_playerid = $int_get_maximum_playerid;
   }
   // If the Faction Name was changed
-  if (isset($str_post_faction_name)){
-	$str_faction_name = $str_post_faction_name;
+  if (isset($str_get_faction_name)){
+	$str_faction_name = $str_get_faction_name;
   }
   // If the Max Xanax was changed
-  if (isset($postIntMaxXanax)){
-	$intMaxXanax = $postIntMaxXanax;
+  if (isset($getIntMaxXanax)){
+	$intMaxXanax = $getIntMaxXanax;
   }
   // If the Min Xanax was changed
-  if (isset($postIntMinXanax)){
-	$intMinXanax = $postIntMinXanax;
+  if (isset($getIntMinXanax)){
+	$intMinXanax = $getIntMinXanax;
   }
 
 
