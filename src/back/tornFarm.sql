@@ -1,9 +1,34 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: mysql-server
+-- Generation Time: Jul 15, 2021 at 11:46 AM
+-- Server version: 10.6.3-MariaDB-1:10.6.3+maria~focal
+-- PHP Version: 7.4.1
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `tornFarm`
+--
 CREATE DATABASE IF NOT EXISTS `tornFarm` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `tornFarm`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `torn_list`
+--
 
 CREATE TABLE `torn_list` (
   `id` bigint(20) NOT NULL COMMENT 'Unique ID',
@@ -18,14 +43,30 @@ CREATE TABLE `torn_list` (
   `maximum_life` int(11) NOT NULL COMMENT 'Maximum Life',
   `last_action` text NOT NULL COMMENT 'Last Action',
   `attack_date` datetime NOT NULL COMMENT 'Date of last attack',
-  `attack_level` int(11) NOT NULL COMMENT 'Base Stats when Attacking',
-  `attack_result` text NOT NULL COMMENT '(W)in or (L)oss'
+  `totalCrimes` bigint(20) NOT NULL,
+  `totalNetworth` bigint(20) NOT NULL,
+  `xanTaken` bigint(20) NOT NULL,
+  `energyDrinkUsed` bigint(20) NOT NULL,
+  `energyRefills` bigint(20) NOT NULL,
+  `statEnhancersUsed` bigint(20) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='List from 2019/07/18 onwards';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `torn_list_ignored`
+--
 
 CREATE TABLE `torn_list_ignored` (
   `id` bigint(20) NOT NULL COMMENT 'Unique ID',
   `playerid` int(11) NOT NULL COMMENT 'PlayerID'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='List from 2019/07/18 onwards';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `torn_ranks`
+--
 
 CREATE TABLE `torn_ranks` (
   `id` int(11) NOT NULL,
@@ -33,62 +74,74 @@ CREATE TABLE `torn_ranks` (
   `rankname` varchar(64) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `torn_ranks` (`id`, `rankid`, `rankname`) VALUES
-(1, 1, 'Absolute beginner'),
-(2, 2, 'Beginner'),
-(3, 3, 'Inexperienced'),
-(4, 4, 'Rookie'),
-(5, 5, 'Novice'),
-(6, 6, 'Below Average'),
-(7, 7, 'Average'),
-(8, 8, 'Reasonable'),
-(9, 9, 'Above Average'),
-(10, 10, 'Competent'),
-(11, 11, 'Highly competent'),
-(12, 12, 'Veteran'),
-(13, 13, 'Distinguished'),
-(14, 14, 'Highly distinguished'),
-(15, 15, 'Professional'),
-(16, 16, 'Star'),
-(17, 17, 'Master'),
-(18, 18, 'Outstanding'),
-(19, 19, 'Celebrity'),
-(20, 20, 'Supreme'),
-(21, 21, 'Idolised'),
-(22, 22, 'Champion'),
-(23, 23, 'Heroic'),
-(24, 24, 'Legendary'),
-(25, 25, 'Elite'),
-(26, 26, 'Invincible');
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visitors`
+--
 
 CREATE TABLE `visitors` (
   `id` bigint(20) NOT NULL COMMENT 'ID',
   `ip` text NOT NULL COMMENT 'IP'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Indexes for dumped tables
+--
 
+--
+-- Indexes for table `torn_list`
+--
 ALTER TABLE `torn_list`
   ADD KEY `id` (`id`);
 
+--
+-- Indexes for table `torn_list_ignored`
+--
 ALTER TABLE `torn_list_ignored`
   ADD KEY `id` (`id`);
 
+--
+-- Indexes for table `torn_ranks`
+--
 ALTER TABLE `torn_ranks`
   ADD PRIMARY KEY (`id`);
 
+--
+-- Indexes for table `visitors`
+--
 ALTER TABLE `visitors`
   ADD PRIMARY KEY (`id`);
 
+--
+-- AUTO_INCREMENT for dumped tables
+--
 
+--
+-- AUTO_INCREMENT for table `torn_list`
+--
 ALTER TABLE `torn_list`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Unique ID';
 
+--
+-- AUTO_INCREMENT for table `torn_list_ignored`
+--
 ALTER TABLE `torn_list_ignored`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Unique ID';
 
+--
+-- AUTO_INCREMENT for table `torn_ranks`
+--
 ALTER TABLE `torn_ranks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--
+-- AUTO_INCREMENT for table `visitors`
+--
 ALTER TABLE `visitors`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID';
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
