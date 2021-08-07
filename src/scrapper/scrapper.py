@@ -1,6 +1,16 @@
+import json
+import time
+import sys
+import csv
+import os
+import random
+import requests
+import mysql.connector
+import datetime
+
 # ---------- CONFIG ----------
 # Your API Key
-apikey = "qCE5aQ6a2kHPpXoy"
+apikey = str(os.getenv('APIKEY', '0'))
 # Starting ID
 startingid = 1
 # Ending ID
@@ -13,16 +23,6 @@ maxrequests = 80
 # ------------------------------------------------------
 
 # ----------  Imports and Main Link Configuration ----------
-import json
-import time
-import sys
-import csv
-import os
-import random
-import requests
-import mysql.connector
-import datetime
-
 
 homepage1 = "https://api.torn.com/user/"
 homepage2 = "?selections=profile,personalstats,crimes&key="
@@ -40,7 +40,9 @@ def addtolog(message):
 # ----------------------------------
 # ---------- MAIN PROGRAM ----------
 # ----------------------------------
-
+if(apikey == '0'):
+    print("No ApiKey Given! Terminating")
+    sys.exit()
 
 current_request = 1
 currentPlayerID = random.randint(startingid,endingid)

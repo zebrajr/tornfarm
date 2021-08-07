@@ -1,0 +1,46 @@
+version: "3.7"
+services:
+  web-server:
+    container_name: webServerBench
+    build:
+      dockerfile: front.Dockerfile
+      context: .
+    restart: unless-stopped
+    volumes:
+      - "./src/front/:/var/www/html/"
+    ports:
+      - "1237:80"
+
+  torn-scrapper:
+    container_name: tornScrapper
+    build:
+      dockerfile: bot.Dockerfile
+      context: .
+    depends_on:
+      - mysql-server
+    restart: unless-stopped
+    environment:
+      - APIKEY="yourApiKey"
+    volumes:
+      - "./src/scrapper/:/scrapper"
+    read_only: true
+
+  mysql-server:
+    container_name: mySqlBench
+    image: mariadb:10.6
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - "./storage/back/:/var/lib/mysql"
+
+  phpmyadmin:
+    container_name: phpMyAdminBench
+    image: phpmyadmin/phpmyadmin:5.0.1
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql-server
+      PMA_USER: root
+      PMA_PASSWORD: secret
+    ports:
+      - "1238:80"
