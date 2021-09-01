@@ -5,18 +5,24 @@ import csv
 import os
 import random
 import requests
-import mysql.connector
+import mysql.connector as mariadb
 import datetime
+import rsc.functions as scrapperHelper
 
 # ---------- CONFIG ----------
 # Your API Key
-apikey = str(os.getenv('APIKEY', '0'))
+apikey          = str(os.getenv('APIKEY', '0'))
+databaseHost    = str(os.getenv('DBHOST', '0'))
+databaseName    = str(os.getenv('DBNAME', '0'))
+databaseUser    = str(os.getenv('DBUSER', '0'))
+databasePwd     = str(os.getenv('DBPWD', '0'))
 # Starting ID
 startingid = 1
 # Ending ID
 endingid = 2690000
 # Maximal API Requests / Minute
 maxrequests = 80
+
 
 # ------------------------------------------------------
 # ---------- Do not edit below here if unsure ----------
@@ -37,6 +43,10 @@ def addtolog(message):
     tempstring = localtime + " | " + message
     print (tempstring)
 
+
+def removeOldPlayerValue(idPlayer):
+    pass
+
 # ----------------------------------
 # ---------- MAIN PROGRAM ----------
 # ----------------------------------
@@ -45,11 +55,15 @@ if(apikey == '0'):
     sys.exit()
 
 current_request = 1
-currentPlayerID = random.randint(startingid,endingid)
+#currentPlayerID = random.randint(startingid,endingid)
+currentPlayerID = startingid
 while currentPlayerID <= endingid:
     # Creates the DB Connection
-    mydb = mysql.connector.connect(
-        host = 'mySqlBench',
+    #scrapperHelper.getProcedure(procName='deletePrevious')
+    #mydb = createDBConnection()
+    #cursor = mydb.cursor(buffered=True)
+    mydb = mariadb.connect(
+        host = 'tornFarmDB',
         user = 'root',
         password = 'secret',
         database = 'tornFarm'
@@ -97,6 +111,7 @@ while currentPlayerID <= endingid:
     # In case Data is returned
     if ((response.get('rank')) and not (SkipAction)):
         # Search for ID as known user
+
         sqlquery = "SELECT id, playerid FROM torn_list WHERE playerid = %s"
         sqlid = (currentPlayerID, )
         mycursor.execute(sqlquery, sqlid)
@@ -123,6 +138,9 @@ while currentPlayerID <= endingid:
         # If the User is found
         if(len(myresult) == 1):
             print ("Updating PlayerID:", currentPlayerID)
+            sqlquery = "DELETE FROM torn_list WHERE playerid = %s"
+            values = (csv[0],)
+            mycursor.execute(sqlquery, values)
             sqlquery = "UPDATE torn_list SET rank = %s, role = %s, level = %s, awards = %s, age = %s, name = %s, faction_name = %s, maximum_life = %s, last_action = %s, attack_date = %s, totalCrimes = %s, totalNetworth = %s, xanTaken = %s, energyDrinkUsed = %s, energyRefills = %s, statEnhancersUsed = %s WHERE playerid = %s"
             values = (csv[1], csv[2], csv[3], csv[4], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13], csv[14], csv[15], csv[16], csv[17], csv[0])
 
