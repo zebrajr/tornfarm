@@ -1,6 +1,6 @@
 <?php
-  $server_name = "mySqlBench";
-  $sqlusername = "root";
-  $sqlpassword = "secret";
-  $sqldatabase = "tornFarm";
+  $server_name = getenv('DBHOST');
+  $sqlusername = getenv('DBUSER');
+  $sqlpassword = getenv('DBPWD');
+  $sqldatabase = getenv('DBNAME');
 ?>

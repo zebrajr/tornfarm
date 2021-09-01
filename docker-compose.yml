@@ -13,6 +13,12 @@ services:
     networks:
       - tornFarmBackend
       - tornFarmFrontend
+    environment:
+      - APIKEY=${APIKEY}
+      - DBHOST=${DBHOST}
+      - DBNAME=${DBNAME}
+      - DBUSER=${DBUSER}
+      - DBPWD=${DBPWD}
 
   torn-scrapper:
     container_name: tornFarmScrapper
