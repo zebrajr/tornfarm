@@ -2,8 +2,8 @@
 -- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: mysql-server
--- Generation Time: Jul 15, 2021 at 11:46 AM
+-- Host: mySqlBench
+-- Generation Time: Sep 01, 2021 at 04:03 PM
 -- Server version: 10.6.3-MariaDB-1:10.6.3+maria~focal
 -- PHP Version: 7.4.1
 
@@ -23,6 +23,21 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `tornFarm` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `tornFarm`;
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`%` PROCEDURE `deletePrevious` (`idPlayer` BIGINT(20))  BEGIN
+	DELETE FROM torn_list
+    WHERE torn_list.playerid = idPlayer;
+END$$
+
+CREATE DEFINER=`root`@`%` PROCEDURE `tornRanks` (`searchStr` TEXT)  BEGIN
+	SELECT * FROM torn_ranks WHERE rankname LIKE searchStr;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -69,10 +84,42 @@ CREATE TABLE `torn_list_ignored` (
 --
 
 CREATE TABLE `torn_ranks` (
-  `id` int(11) NOT NULL,
   `rankid` int(11) NOT NULL,
-  `rankname` varchar(64) NOT NULL
+  `rankname` varchar(64) NOT NULL,
+  `triggersRequired` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `torn_ranks`
+--
+
+INSERT INTO `torn_ranks` (`rankid`, `rankname`, `triggersRequired`) VALUES
+(1, 'Absolute beginner', 0),
+(2, 'Beginner', 1),
+(3, 'Inexperienced', 2),
+(4, 'Rookie', 3),
+(5, 'Novice', 4),
+(6, 'Below Average', 5),
+(7, 'Average', 6),
+(8, 'Reasonable', 7),
+(9, 'Above Average', 8),
+(10, 'Competent', 9),
+(11, 'Highly Competent', 10),
+(12, 'Veteran', 11),
+(13, 'Distinguished', 12),
+(14, 'Highly Distinguished', 13),
+(15, 'Professional', 14),
+(16, 'Star', 15),
+(17, 'Master', 16),
+(18, 'Outstanding', 17),
+(19, 'Celebrity', 18),
+(20, 'Supreme', 19),
+(21, 'Idolized', 20),
+(22, 'Champion', 21),
+(23, 'Heroic', 22),
+(24, 'Legendary', 23),
+(25, 'Elite', 24),
+(26, 'Invincible', 25);
 
 -- --------------------------------------------------------
 
@@ -105,7 +152,7 @@ ALTER TABLE `torn_list_ignored`
 -- Indexes for table `torn_ranks`
 --
 ALTER TABLE `torn_ranks`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`rankid`);
 
 --
 -- Indexes for table `visitors`
@@ -133,7 +180,7 @@ ALTER TABLE `torn_list_ignored`
 -- AUTO_INCREMENT for table `torn_ranks`
 --
 ALTER TABLE `torn_ranks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `rankid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `visitors`
