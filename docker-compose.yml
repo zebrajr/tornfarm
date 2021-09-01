@@ -20,27 +20,32 @@ services:
       - mysql-server
     restart: unless-stopped
     environment:
-      - APIKEY="yourApiKey"
+      - APIKEY=${APIKEY}
+      - DBHOST=${DBHOST}
+      - DBNAME=${DBNAME}
+      - DBUSER=${DBUSER}
+      - DBPWD=${DBPWD}
     volumes:
       - "./src/scrapper/:/scrapper"
     read_only: true
 
   mysql-server:
-    container_name: mySqlBench
+    container_name: ${DBHOST}
     image: mariadb:10.6
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: ${DBPWD}
     volumes:
       - "./storage/back/:/var/lib/mysql"
+      - "./src/back/:/docker-entrypoint-initdb.d:ro"
 
   phpmyadmin:
     container_name: phpMyAdminBench
     image: phpmyadmin/phpmyadmin:5.0.1
     restart: unless-stopped
     environment:
-      PMA_HOST: mysql-server
-      PMA_USER: root
-      PMA_PASSWORD: secret
+      PMA_HOST: ${DBHOST}
+      PMA_USER: ${DBUSER}
+      PMA_PASSWORD: ${DBPWD}
     ports:
       - "1238:80"
