@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   web-server:
-    container_name: webServerBench
+    container_name: tornFarmWebServer
     build:
       dockerfile: front.Dockerfile
       context: .
@@ -9,10 +9,13 @@ services:
     volumes:
       - "./src/front/:/var/www/html/"
     ports:
-      - "1237:80"
+      - "80:80"
+    networks:
+      - tornFarmBackend
+      - tornFarmFrontend
 
   torn-scrapper:
-    container_name: tornScrapper
+    container_name: tornFarmScrapper
     build:
       dockerfile: bot.Dockerfile
       context: .
@@ -28,6 +31,8 @@ services:
     volumes:
       - "./src/scrapper/:/scrapper"
     read_only: true
+    networks:
+      - tornFarmBackend
 
   mysql-server:
     container_name: ${DBHOST}
@@ -38,9 +43,11 @@ services:
     volumes:
       - "./storage/back/:/var/lib/mysql"
       - "./src/back/:/docker-entrypoint-initdb.d:ro"
+    networks:
+      - tornFarmBackend
 
   phpmyadmin:
-    container_name: phpMyAdminBench
+    container_name: phpMyAdminTornFarm
     image: phpmyadmin/phpmyadmin:5.0.1
     restart: unless-stopped
     environment:
@@ -49,3 +56,13 @@ services:
       PMA_PASSWORD: ${DBPWD}
     ports:
       - "1238:80"
+    networks:
+      - tornFarmBackend
+      - tornFarmFrontend
+
+
+networks:
+  tornFarmBackend:
+    external: true
+  tornFarmFrontend:
+    external: true
