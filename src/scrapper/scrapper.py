@@ -137,22 +137,19 @@ while currentPlayerID <= endingid:
 
         # If the User is found
         if(len(myresult) == 1):
-            print ("Updating PlayerID:", currentPlayerID)
+            print ("Deleting old PlayerID:", currentPlayerID)
             sqlquery = "DELETE FROM torn_list WHERE playerid = %s"
             values = (csv[0],)
             mycursor.execute(sqlquery, values)
-            sqlquery = "UPDATE torn_list SET rank = %s, role = %s, level = %s, awards = %s, age = %s, name = %s, faction_name = %s, maximum_life = %s, last_action = %s, attack_date = %s, totalCrimes = %s, totalNetworth = %s, xanTaken = %s, energyDrinkUsed = %s, energyRefills = %s, statEnhancersUsed = %s WHERE playerid = %s"
-            values = (csv[1], csv[2], csv[3], csv[4], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13], csv[14], csv[15], csv[16], csv[17], csv[0])
 
 
         # Added
         # totalCrimes = %s, totalNetworth = %s, xanTaken = %s, energyDrinkUsed = %s, energyRefills = %s, statEnhancersUsed = %s
         #totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed
         # If the User isn't found
-        if(len(myresult) == 0):
-            print ("Creating PlayerID:", currentPlayerID)
-            sqlquery = "INSERT INTO torn_list (rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date, totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            values = (csv[1], csv[2], csv[3], csv[4], csv[5], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13], csv[14], csv[15], csv[16], csv[17])
+        print ("Creating PlayerID:", currentPlayerID)
+        sqlquery = "INSERT INTO torn_list (rank, role, level, awards, age, playerid, name, faction_name, maximum_life, last_action, attack_date, totalCrimes, totalNetworth, xanTaken, energyDrinkUsed, energyRefills, statEnhancersUsed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        values = (csv[1], csv[2], csv[3], csv[4], csv[5], csv[6], csv[7], csv[8], csv[9], csv[10], csv[11], csv[12], csv[13], csv[14], csv[15], csv[16], csv[17])
 
         mycursor.execute(sqlquery, values)
         mydb.commit()
