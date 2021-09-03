@@ -17,9 +17,9 @@ databaseName    = str(os.getenv('DBNAME', '0'))
 databaseUser    = str(os.getenv('DBUSER', '0'))
 databasePwd     = str(os.getenv('DBPWD', '0'))
 # Starting ID
-startingid = 1
+startingid = int(os.getenv('STARTINGID', 0))
 # Ending ID
-endingid = 2690000
+endingid = int(os.getenv('ENDINGID', 0))
 # Maximal API Requests / Minute
 maxrequests = 80
 
@@ -88,13 +88,21 @@ while currentPlayerID <= endingid:
         current_request = 1
         time.sleep(50)
 
+    # If Target should be skipped
+    if(SkipAction):
+        mydb.close()
+        currentPlayerID += 1
+        continue
+
     # Creates Full Link and makes the Web Request
     if not SkipAction:
         fulllink = homepage1 + str(currentPlayerID) + homepage2 + apikey
         response = json.loads(requests.get(fulllink).text)
 
+
+
     # If it contains an Error Attribute
-    if ((response.get('error')) and not (SkipAction)):
+    if (response.get('error')): #[REMOVEME] and not (SkipAction)):
         if (response.get('error').get('code') == 5):
             addtolog("Too Many Requests. Waiting 10 seconds...")
             current_request = 1
@@ -109,7 +117,7 @@ while currentPlayerID <= endingid:
             mycursor.execute(sqlquery, values)
             mydb.commit()
     # In case Data is returned
-    if ((response.get('rank')) and not (SkipAction)):
+    if (response.get('rank')): #[REMOVEME] and not (SkipAction)):
         # Search for ID as known user
 
         sqlquery = "SELECT id, playerid FROM torn_list WHERE playerid = %s"
