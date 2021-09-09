@@ -2,8 +2,8 @@
 -- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: mySqlBench
--- Generation Time: Sep 01, 2021 at 04:03 PM
+-- Host: tornFarmDB
+-- Generation Time: Sep 03, 2021 at 07:51 AM
 -- Server version: 10.6.3-MariaDB-1:10.6.3+maria~focal
 -- PHP Version: 7.4.1
 
@@ -33,7 +33,11 @@ CREATE DEFINER=`root`@`%` PROCEDURE `deletePrevious` (`idPlayer` BIGINT(20))  BE
     WHERE torn_list.playerid = idPlayer;
 END$$
 
-CREATE DEFINER=`root`@`%` PROCEDURE `tornRanks` (`searchStr` TEXT)  BEGIN
+CREATE DEFINER=`root`@`%` PROCEDURE `test` ()  BEGIN
+	SELECT * FROM torn_ranks;
+END$$
+
+CREATE DEFINER=`root`@`%` PROCEDURE `tornRanks` (IN `searchStr` TEXT)  BEGIN
 	SELECT * FROM torn_ranks WHERE rankname LIKE searchStr;
 END$$
 
@@ -62,7 +66,7 @@ CREATE TABLE `torn_list` (
   `totalNetworth` bigint(20) NOT NULL,
   `xanTaken` bigint(20) NOT NULL,
   `energyDrinkUsed` bigint(20) NOT NULL,
-  `energyRefills` bigint(20) NOT NULL,
+  `energyRefills` bigint(20) DEFAULT 0,
   `statEnhancersUsed` bigint(20) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='List from 2019/07/18 onwards';
 
