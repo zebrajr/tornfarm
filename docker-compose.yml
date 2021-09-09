@@ -34,6 +34,8 @@ services:
       - DBNAME=${DBNAME}
       - DBUSER=${DBUSER}
       - DBPWD=${DBPWD}
+      - STARTINGID=${STARTINGID}
+      - ENDINGID=${ENDINGID}
     volumes:
       - "./src/scrapper/:/scrapper"
     read_only: true
